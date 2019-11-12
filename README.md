@@ -10,6 +10,7 @@ Movie analytics command line tool. Performs following aggregations over IMDB dat
    - Directors with movies count > included.
 
 ## Getting Started
+**!Permissions to create directories/files in root folder required!**
 Start app \
 (estimated duration: 1.~1min 2. ~10min):
 
