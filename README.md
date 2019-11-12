@@ -10,5 +10,7 @@ Movie analytics command line tool. Performs following aggregations over IMDB dat
    - Directors with movies count > included.
 
 ## Getting Started
-run(estimated duration: 1.~1min 2. ~10min):
+Start app \
+(estimated duration: 1.~1min 2. ~10min):
+
 `./gradlew clean shadowJar && java -jar build/libs/movie-analytics-1.0-all.jar`  

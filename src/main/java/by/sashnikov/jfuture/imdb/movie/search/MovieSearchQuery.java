@@ -29,7 +29,6 @@ public class MovieSearchQuery implements SearchQuery<Movie> {
   private static final String GENRE_PARAM_NAME = "genres";
   private static final String START_PARAM_NAME = "start";
   private static final String COUNTRIES_PARAM_NAME = "countries";
-  private static final String QUERY_SIZE_PARAM_NAME = "count";
   private static final int QUERY_SIZE = 20;
 
   private final MovieSearchPageParser movieSearchPageParser;
@@ -112,7 +111,6 @@ public class MovieSearchQuery implements SearchQuery<Movie> {
             buildReleaseDateParameter(startReleaseDate, endReleaseDate))
         .addParameter(GENRE_PARAM_NAME, genre.parameterName)
         .addParameter(START_PARAM_NAME, Integer.toString(start))
-        .addParameter(QUERY_SIZE_PARAM_NAME, Integer.toString(QUERY_SIZE))
         .addParameter(COUNTRIES_PARAM_NAME, country.searchParam);
 
     return uriBuilder.build().toString();

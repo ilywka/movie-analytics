@@ -65,12 +65,10 @@ public class MovieReleasesPageParser extends Parser {
   }
 
   private static LocalDate parseDateString(String releaseDateStr) {
-    LocalDate releaseLocalDate =
-        Optional.ofNullable(parseDateString(releaseDateStr, DATE_FORMATTER))
-            .or(() -> Optional.ofNullable(parseDateString(releaseDateStr, MONTH_FORMATTER)))
-            .or(() -> Optional.ofNullable(parseDateString(releaseDateStr, YEAR_FORMATTER)))
-            .orElse(null);
-    return releaseLocalDate;
+    return Optional.ofNullable(parseDateString(releaseDateStr, DATE_FORMATTER))
+        .or(() -> Optional.ofNullable(parseDateString(releaseDateStr, MONTH_FORMATTER)))
+        .or(() -> Optional.ofNullable(parseDateString(releaseDateStr, YEAR_FORMATTER)))
+        .orElse(null);
   }
 
   private static LocalDate parseDateString(String releaseDateStr, DateTimeFormatter formatter) {

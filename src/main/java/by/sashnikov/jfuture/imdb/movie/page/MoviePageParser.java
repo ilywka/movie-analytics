@@ -18,7 +18,7 @@ public class MoviePageParser extends Parser {
       String rating = ratingElement.text();
       try {
         return Double.valueOf(rating);
-      } catch (NumberFormatException e) {
+      } catch (NumberFormatException ignored) {
       }
     }
     return null;

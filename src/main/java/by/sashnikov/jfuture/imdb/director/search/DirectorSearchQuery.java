@@ -43,7 +43,6 @@ public class DirectorSearchQuery implements SearchQuery<Director> {
     try {
       URIBuilder requestUrl = ParseUtil.createRequestUrl(BASE_SEARCH_URL, SearchParameter.values());
       requestUrl.addParameter(START_PARAM_NAME, Integer.toString(start));
-      requestUrl.addParameter(QUERY_SIZE_PARAM_NAME, Integer.toString(QUERY_SIZE));
       return requestUrl.build().toString();
     } catch (URISyntaxException e) {
       throw new RuntimeException(e);
@@ -84,7 +83,8 @@ public class DirectorSearchQuery implements SearchQuery<Director> {
 
   enum SearchParameter implements NameValuePair {
     GROUPS("groups", "oscar_best_director_nominees,best_director_winner"),
-    ADULT("adult", "include");
+    ADULT("adult", "include"),
+    COUNT("count", Integer.toString(QUERY_SIZE));
 
     private final String parameterName;
     private final String parameterValue;

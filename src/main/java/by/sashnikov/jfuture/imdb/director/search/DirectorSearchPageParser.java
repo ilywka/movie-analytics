@@ -13,8 +13,6 @@ import org.jsoup.select.Elements;
  */
 class DirectorSearchPageParser extends SearchPageParser {
 
-  private Set<DirectorSearchDTO> data;
-
   public DirectorSearchPageParser(String pageUrl) {
     super(pageUrl);
   }
