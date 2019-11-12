@@ -16,11 +16,17 @@ public class ParseUtil {
   public static final String IMDB_URL = "https://www.imdb.com";
 
   public static Document getDocumentQuietly(String url) {
-    try {
-      System.out.println(url);
-      return Jsoup.connect(url).get();
-    } catch (IOException e) {
-      throw new RuntimeException(e);
+    int i = 0;
+    while (true) {
+      try {
+        return Jsoup.connect(url)
+            .get();
+      } catch (IOException e) {
+        i++;
+        if (i == 5) {
+          throw new RuntimeException(e);
+        }
+      }
     }
   }
 

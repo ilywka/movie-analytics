@@ -15,6 +15,9 @@ public abstract class Parser {
   }
 
   protected Document getDocument() {
-    return document == null ? (document = ParseUtil.getDocumentQuietly(pageUrl)) : document;
+    if (document == null) {
+      document = ParseUtil.getDocumentQuietly(pageUrl);
+    }
+    return document;
   }
 }

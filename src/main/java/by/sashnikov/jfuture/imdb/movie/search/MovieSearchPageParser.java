@@ -49,7 +49,10 @@ class MovieSearchPageParser extends Parser {
   }
 
   public Set<MovieSearchDTO> getPageData() {
-    return data == null ? (data = parsePage()) : data;
+    if (data == null) {
+      data = parsePage();
+    }
+    return data;
   }
 
   private Set<MovieSearchDTO> parsePage() {
