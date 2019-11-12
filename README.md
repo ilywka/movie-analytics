@@ -7,7 +7,7 @@ Movie analytics command line tool. Performs following aggregations over IMDB dat
     - Movie included if its release date for country is present on movie releases page 
     (https://www.imdb.com/title/tt3398314/releaseinfo)
 2. Top 10 directors by average movie rating.
-   - Directors with movies count > included.
+   - Directors with movies count >5 included.
 
 ## Getting Started
 **!Permissions to create directories/files in root folder required!**
