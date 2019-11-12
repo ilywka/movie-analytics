@@ -11,8 +11,6 @@ import java.util.Map;
 import java.util.Optional;
 import by.sashnikov.jfuture.imdb.Parser;
 import org.jsoup.nodes.Element;
-import org.jsoup.nodes.Node;
-import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
 /**
@@ -59,11 +57,8 @@ public class MovieReleasesPageParser extends Parser {
 
   private static LocalDate obtainReleaseDate(Elements releaseDateElements) {
     String releaseDateStr = Optional.ofNullable(releaseDateElements.get(0))
-        .map(Node::childNodes)
-        .map(nodes -> nodes.get(0))
-        .filter(node -> node instanceof TextNode)
-        .map(TextNode.class::cast)
-        .map(TextNode::text)
+        .filter(Element::hasText)
+        .map(Element::text)
         .map(String::trim)
         .orElse(null);
     return parseDateString(releaseDateStr);
@@ -88,13 +83,8 @@ public class MovieReleasesPageParser extends Parser {
 
   private static String obtainReleaseCountryName(Elements countryNameElements) {
     return Optional.ofNullable(countryNameElements.get(0))
-        .map(Node::childNodes)
-        .map(nodes -> nodes.get(0))
-        .map(Node::childNodes)
-        .map(nodes -> nodes.get(0))
-        .filter(node -> node instanceof TextNode)
-        .map(TextNode.class::cast)
-        .map(TextNode::text)
+        .filter(Element::hasText)
+        .map(Element::text)
         .map(String::trim)
         .orElse(null);
   }

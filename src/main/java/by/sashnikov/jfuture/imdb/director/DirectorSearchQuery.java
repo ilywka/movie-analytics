@@ -15,16 +15,28 @@ import org.apache.http.client.utils.URIBuilder;
 public class DirectorSearchQuery implements SearchQuery<Director> {
 
   private static final String BASE_SEARCH_URL = "https://www.imdb.com/search/name/";
+  private static final String START_PARAM_NAME = "start";
+  private static final String QUERY_SIZE_PARAM_NAME = "count";
+  private static final int QUERY_SIZE = 20;
 
   private final DirectorSearchPageParser parser;
+  private int start;
 
   public DirectorSearchQuery() {
-    this.parser = new DirectorSearchPageParser(buildSearchQueryUrl());
+    this.start = 1;
+    this.parser = new DirectorSearchPageParser(buildSearchQueryUrl(start));
   }
 
-  private String buildSearchQueryUrl() {
+  private DirectorSearchQuery(int start) {
+    this.start = start;
+    this.parser = new DirectorSearchPageParser(buildSearchQueryUrl(start));
+  }
+
+  private String buildSearchQueryUrl(int start) {
     try {
       URIBuilder requestUrl = ParseUtil.createRequestUrl(BASE_SEARCH_URL, SearchParameter.values());
+      requestUrl.addParameter(START_PARAM_NAME, Integer.toString(start));
+      requestUrl.addParameter(QUERY_SIZE_PARAM_NAME, Integer.toString(QUERY_SIZE));
       return requestUrl.build().toString();
     } catch (URISyntaxException e) {
       throw new RuntimeException(e);
@@ -33,7 +45,7 @@ public class DirectorSearchQuery implements SearchQuery<Director> {
 
   @Override
   public Set<Director> getData() {
-    DirectorSearchDTO directorSearchDTO = parser.directorsData();
+    Set<DirectorSearchDTO> directorSearchDTO = parser.directorsData();
     return null;
   }
 
@@ -67,14 +79,22 @@ public class DirectorSearchQuery implements SearchQuery<Director> {
 
   private class Itr implements Iterator<SearchQuery<Director>> {
 
+    private int currentPage = DirectorSearchQuery.this.start / QUERY_SIZE;
+    private DirectorSearchQuery nextQuery = DirectorSearchQuery.this;
+    private int totalPages = parser.totalResultAmount() / QUERY_SIZE + 1;
+
     @Override
     public boolean hasNext() {
-      return false;
+      return currentPage != totalPages;
     }
 
     @Override
     public SearchQuery<Director> next() {
-      return null;
+      DirectorSearchQuery q = nextQuery;
+      nextQuery = new DirectorSearchQuery(
+          ++currentPage * QUERY_SIZE + 1
+      );
+      return q;
     }
   }
 }

@@ -30,6 +30,15 @@ public class ParseUtil {
     }
   }
 
+  public static String extractPath(String hrefDirtyValue) {
+    int redundantParamsStart = hrefDirtyValue.lastIndexOf('?');
+    if (redundantParamsStart == -1) {
+      return hrefDirtyValue;
+    } else {
+      return hrefDirtyValue.substring(0, redundantParamsStart);
+    }
+  }
+
   public static URIBuilder createRequestUrl(String baseUrl, NameValuePair[] parameters)
       throws URISyntaxException {
     URIBuilder uriBuilder = new URIBuilder(baseUrl);

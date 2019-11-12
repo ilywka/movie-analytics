@@ -2,17 +2,13 @@ package by.sashnikov.jfuture.imdb.movie.search;
 
 import java.time.Year;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import by.sashnikov.jfuture.imdb.ParseUtil;
 import by.sashnikov.jfuture.imdb.Parser;
 import org.jsoup.nodes.Element;
-import org.jsoup.nodes.Node;
-import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
 /**
@@ -33,15 +29,11 @@ class MovieSearchPageParser extends Parser {
     for (Element navElement : desc) {
       Elements spanElements = navElement.getElementsByTag("span");
       for (Element span : spanElements) {
-        for (Node spanNode : span.childNodes()) {
-          if (spanNode instanceof TextNode) {
-            String value = ((TextNode) spanNode).text();
-            Pattern totalResultPattern = Pattern.compile("([\\d,]*) titles\\.");
-            Matcher matcher = totalResultPattern.matcher(value);
-            if (matcher.find()) {
-              return Integer.valueOf(matcher.group(1).replace(",", ""));
-            }
-          }
+        String value = span.text();
+        Pattern totalResultPattern = Pattern.compile("([\\d,]*) titles\\.");
+        Matcher matcher = totalResultPattern.matcher(value);
+        if (matcher.find()) {
+          return Integer.valueOf(matcher.group(1).replace(",", ""));
         }
       }
     }
@@ -76,14 +68,10 @@ class MovieSearchPageParser extends Parser {
   private String parseMovieLink(Element itemHeader) {
     Elements linkElement = itemHeader.getElementsByAttribute("href");
     String href = linkElement.attr("href");
-    String moviePath = extractPath(href);
+    String moviePath = ParseUtil.extractPath(href);
     return ParseUtil.IMDB_URL.concat(moviePath);
   }
 
-  private String extractPath(String hrefDirtyValue) {
-    int redundantParamsStart = hrefDirtyValue.lastIndexOf('?');
-    return hrefDirtyValue.substring(0, redundantParamsStart);
-  }
 
   private Year parseYear(Element itemHeader) {
     Elements yearElements = itemHeader
@@ -93,12 +81,8 @@ class MovieSearchPageParser extends Parser {
 
   private Year parseYear(Elements yearElements) {
     return Optional.ofNullable(yearElements.get(0))
-        .map(Node::childNodes)
-        .filter(Predicate.not(List::isEmpty))
-        .map(nodes -> nodes.get(0))
-        .filter(node -> node instanceof TextNode)
-        .map(TextNode.class::cast)
-        .map(TextNode::text)
+        .filter(Element::hasText)
+        .map(Element::text)
         .map(this::parseYearString)
         .map(Year::parse)
         .orElse(null);

@@ -29,14 +29,15 @@ public class MovieSearchQuery implements SearchQuery<Movie> {
   private static final String GENRE_PARAM_NAME = "genres";
   private static final String START_PARAM_NAME = "start";
   private static final String COUNTRIES_PARAM_NAME = "countries";
-  private static final Integer QUERY_SIZE = 50;
+  private static final String QUERY_SIZE_PARAM_NAME = "count";
+  private static final int QUERY_SIZE = 50;
 
   private final MovieSearchPageParser movieSearchPageParser;
   private final LocalDate startReleaseDate;
   private final LocalDate endReleaseDate;
   private final Genre genre;
   private final Country country;
-  private final Integer start;
+  private final int start;
 
   public MovieSearchQuery(LocalDate startReleaseDate, LocalDate endReleaseDate, Genre genre,
       Country country) {
@@ -93,7 +94,7 @@ public class MovieSearchQuery implements SearchQuery<Movie> {
   }
 
   private MovieSearchPageParser createParser(LocalDate startReleaseDate,
-      LocalDate endReleaseDate, Genre genre, Country country, Integer start) {
+      LocalDate endReleaseDate, Genre genre, Country country, int start) {
     try {
       String url = buildSearchQueryUrl(startReleaseDate, endReleaseDate, genre, country, start);
       return new MovieSearchPageParser(url);
@@ -103,14 +104,15 @@ public class MovieSearchQuery implements SearchQuery<Movie> {
   }
 
   private String buildSearchQueryUrl(LocalDate startReleaseDate, LocalDate endReleaseDate,
-      Genre genre, Country country, Integer start) throws URISyntaxException {
+      Genre genre, Country country, int start) throws URISyntaxException {
     URIBuilder uriBuilder = ParseUtil.createRequestUrl(BASE_SEARCH_URL, SearchParameter.values());
 
     uriBuilder
         .addParameter(RELEASE_DATE_PARAM_NAME,
             buildReleaseDateParameter(startReleaseDate, endReleaseDate))
         .addParameter(GENRE_PARAM_NAME, genre.parameterName)
-        .addParameter(START_PARAM_NAME, start.toString())
+        .addParameter(START_PARAM_NAME, Integer.toString(start))
+        .addParameter(QUERY_SIZE_PARAM_NAME, Integer.toString(QUERY_SIZE))
         .addParameter(COUNTRIES_PARAM_NAME, country.searchParam);
 
     return uriBuilder.build().toString();
@@ -152,7 +154,7 @@ public class MovieSearchQuery implements SearchQuery<Movie> {
   enum SearchParameter implements NameValuePair {
     TITLE_TYPE("title_type", "feature"),
     ADULT("adult", "include"),
-    COUNT("count", QUERY_SIZE.toString()),
+    COUNT("count", Integer.toString(QUERY_SIZE)),
     REF("ref_", "adv_nxt");
 
     private final String parameterName;
