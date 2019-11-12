@@ -72,8 +72,8 @@ public class JfreePlot {
     DefaultCategoryDataset dataset = createDataset(directors);
     JFreeChart chart = ChartFactory.createBarChart(
         "Directors average movie rating",
-        "Year", "Movies number",
-        dataset, PlotOrientation.VERTICAL,
+        "Name", "Average Rating",
+        dataset, PlotOrientation.HORIZONTAL,
         true, true, false);
     createChartFile("directors_rating", chart);
   }
