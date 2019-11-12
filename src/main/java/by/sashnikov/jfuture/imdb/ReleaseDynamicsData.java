@@ -9,7 +9,7 @@ import by.sashnikov.jfuture.model.Movie;
 /**
  * @author Ilya_Sashnikau
  */
-public class ReleaseDynamicsData extends DataFetcher<Movie> {
+public class ReleaseDynamicsData extends Data<Movie> {
 
   private Country country;
   private Genre genre;

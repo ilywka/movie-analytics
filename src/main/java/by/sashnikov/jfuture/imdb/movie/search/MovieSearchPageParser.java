@@ -7,14 +7,14 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import by.sashnikov.jfuture.imdb.ParseUtil;
-import by.sashnikov.jfuture.imdb.Parser;
+import by.sashnikov.jfuture.imdb.parser.SearchPageParser;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 /**
  * @author Ilya_Sashnikau
  */
-class MovieSearchPageParser extends Parser {
+class MovieSearchPageParser extends SearchPageParser {
 
   private static final Pattern YEAR_PATTERN = Pattern.compile("\\((\\d*)\\)");
 
@@ -22,22 +22,6 @@ class MovieSearchPageParser extends Parser {
 
   MovieSearchPageParser(String url) {
     super(url);
-  }
-
-  public Integer totalResultAmount() {
-    Elements desc = getDocument().getElementsByClass("desc");
-    for (Element navElement : desc) {
-      Elements spanElements = navElement.getElementsByTag("span");
-      for (Element span : spanElements) {
-        String value = span.text();
-        Pattern totalResultPattern = Pattern.compile("([\\d,]*) titles\\.");
-        Matcher matcher = totalResultPattern.matcher(value);
-        if (matcher.find()) {
-          return Integer.valueOf(matcher.group(1).replace(",", ""));
-        }
-      }
-    }
-    throw new RuntimeException("Total movie parsing error.");
   }
 
   public Set<MovieSearchDTO> getPageData() {

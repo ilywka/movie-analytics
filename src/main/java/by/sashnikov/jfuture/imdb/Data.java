@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import by.sashnikov.jfuture.util.ProgressBarUtil;
@@ -14,18 +14,17 @@ import by.sashnikov.jfuture.util.ProgressBarUtil;
 /**
  * @author Ilya_Sashnikau
  */
-public abstract class DataFetcher<T> {
+public abstract class Data<T> {
 
-  public Set<T> fetchData() {
+  public Set<T> data() {
     List<SearchQuery<T>> allSearchQueries = new ArrayList<>(createAllSearchQueries());
     String taskName = getTaskName();
-    Map<T, T> data = ProgressBarUtil
-        .wrapStream(allSearchQueries.parallelStream(), taskName)
+
+    ConcurrentMap<Set<T>, Set<T>> data = ProgressBarUtil.wrapStream(allSearchQueries.parallelStream(), taskName)
         .map(SearchQuery::getData)
-        .flatMap(Collection::stream)
-        .filter(Objects::nonNull)
         .collect(Collectors.toConcurrentMap(Function.identity(), Function.identity()));
-    return data.keySet();
+    return data.keySet().stream().flatMap(Collection::stream).filter(Objects::nonNull).collect(
+        Collectors.toSet());
   }
 
   private Set<SearchQuery<T>> createAllSearchQueries() {

@@ -9,7 +9,7 @@ import java.time.temporal.ChronoField;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import by.sashnikov.jfuture.imdb.Parser;
+import by.sashnikov.jfuture.imdb.parser.Parser;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
@@ -88,5 +88,4 @@ public class MovieReleasesPageParser extends Parser {
         .map(String::trim)
         .orElse(null);
   }
-
 }

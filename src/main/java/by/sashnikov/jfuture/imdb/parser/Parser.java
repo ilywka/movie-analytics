@@ -1,5 +1,6 @@
-package by.sashnikov.jfuture.imdb;
+package by.sashnikov.jfuture.imdb.parser;
 
+import by.sashnikov.jfuture.imdb.ParseUtil;
 import org.jsoup.nodes.Document;
 
 /**

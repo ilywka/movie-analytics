@@ -11,7 +11,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import by.sashnikov.jfuture.imdb.ParseUtil;
 import by.sashnikov.jfuture.imdb.SearchQuery;
-import by.sashnikov.jfuture.imdb.movie.release.MovieRelasesDTO;
+import by.sashnikov.jfuture.imdb.movie.release.MovieReleasesDTO;
 import by.sashnikov.jfuture.imdb.movie.release.MovieReleasesQuery;
 import by.sashnikov.jfuture.model.Country;
 import by.sashnikov.jfuture.model.Genre;
@@ -30,7 +30,7 @@ public class MovieSearchQuery implements SearchQuery<Movie> {
   private static final String START_PARAM_NAME = "start";
   private static final String COUNTRIES_PARAM_NAME = "countries";
   private static final String QUERY_SIZE_PARAM_NAME = "count";
-  private static final int QUERY_SIZE = 50;
+  private static final int QUERY_SIZE = 20;
 
   private final MovieSearchPageParser movieSearchPageParser;
   private final LocalDate startReleaseDate;
@@ -83,7 +83,7 @@ public class MovieSearchQuery implements SearchQuery<Movie> {
     Year releaseYear = movieSearchDTO.getReleaseYear();
     if (releaseYear == null) {
       MovieReleasesQuery movieReleasesQuery = new MovieReleasesQuery(movieSearchDTO.getLink());
-      MovieRelasesDTO data = movieReleasesQuery.getData();
+      MovieReleasesDTO data = movieReleasesQuery.getData();
       for (Entry<String, Year> countryReleaseYearEntry : data.countryReleaseYear.entrySet()) {
         String countryName = countryReleaseYearEntry.getKey();
         if (this.country.name().equalsIgnoreCase(countryName)) {
@@ -180,7 +180,7 @@ public class MovieSearchQuery implements SearchQuery<Movie> {
 
     private int currentPage = MovieSearchQuery.this.start / QUERY_SIZE;
     private MovieSearchQuery nextQuery = MovieSearchQuery.this;
-    private int totalPages = movieSearchPageParser.totalResultAmount() / QUERY_SIZE + 1;
+    private int totalPages = movieSearchPageParser.totalItemsFound() / QUERY_SIZE + 1;
 
     @Override
     public boolean hasNext() {

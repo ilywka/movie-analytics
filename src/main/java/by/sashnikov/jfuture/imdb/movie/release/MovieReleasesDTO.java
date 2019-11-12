@@ -6,14 +6,15 @@ import java.util.Map;
 /**
  * @author Ilya_Sashnikau
  */
-public class MovieRelasesDTO {
+public class MovieReleasesDTO {
 
-  public final String movieLink;
+  public final String  link;
   public final Map<String, Year> countryReleaseYear;
 
-  public MovieRelasesDTO(String movieLink,
+  public MovieReleasesDTO(String link,
       Map<String, Year> countryReleaseYear) {
-    this.movieLink = movieLink;
+    this.link = link;
     this.countryReleaseYear = countryReleaseYear;
   }
+
 }

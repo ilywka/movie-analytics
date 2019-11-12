@@ -1,12 +1,12 @@
 package by.sashnikov.jfuture.imdb;
 
-import by.sashnikov.jfuture.imdb.director.DirectorSearchQuery;
+import by.sashnikov.jfuture.imdb.director.search.DirectorSearchQuery;
 import by.sashnikov.jfuture.model.Director;
 
 /**
  * @author Ilya_Sashnikau
  */
-public class TopDirectorsData extends DataFetcher<Director> {
+public class TopDirectorsData extends Data<Director> {
 
   String getTaskName() {
     return "Pulling directors data.";

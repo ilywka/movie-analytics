@@ -19,6 +19,6 @@ public class ProgressBarUtil {
         .setStyle(ProgressBarStyle.ASCII)
         .setTaskName(taskName)
         .setUpdateIntervalMillis(1000)
-        .setUnit(" Search page", 1);
+        .setUnit("", 1);
   }
 }

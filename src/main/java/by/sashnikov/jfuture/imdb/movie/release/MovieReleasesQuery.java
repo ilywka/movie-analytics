@@ -18,9 +18,9 @@ public class MovieReleasesQuery {
     this.movieSearchPageParser = new MovieReleasesPageParser(movieLink.concat(RELEASE_PAGE_PATH));
   }
 
-  public MovieRelasesDTO getData() {
+  public MovieReleasesDTO getData() {
     Map<String, Year> stringYearMap = movieSearchPageParser.parseCountryReleaseYear();
-    return new MovieRelasesDTO(movieLink, stringYearMap);
+    return new MovieReleasesDTO(movieLink, stringYearMap);
   }
 
 }

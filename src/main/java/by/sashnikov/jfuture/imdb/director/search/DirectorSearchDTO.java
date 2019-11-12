@@ -1,4 +1,4 @@
-package by.sashnikov.jfuture.imdb.director;
+package by.sashnikov.jfuture.imdb.director.search;
 
 /**
  * @author Ilya_Sashnikau

@@ -1,9 +1,9 @@
-package by.sashnikov.jfuture.imdb.director;
+package by.sashnikov.jfuture.imdb.director.search;
 
 import java.util.HashSet;
 import java.util.Set;
 import by.sashnikov.jfuture.imdb.ParseUtil;
-import by.sashnikov.jfuture.imdb.Parser;
+import by.sashnikov.jfuture.imdb.parser.SearchPageParser;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -11,7 +11,7 @@ import org.jsoup.select.Elements;
 /**
  * @author Ilya_Sashnikau
  */
-class DirectorSearchPageParser extends Parser {
+class DirectorSearchPageParser extends SearchPageParser {
 
   private Set<DirectorSearchDTO> data;
 
@@ -38,9 +38,5 @@ class DirectorSearchPageParser extends Parser {
       }
     }
     return directors;
-  }
-
-  public int totalResultAmount() {
-    return 0;
   }
 }

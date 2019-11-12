@@ -1,11 +1,18 @@
-package by.sashnikov.jfuture.imdb.director;
+package by.sashnikov.jfuture.imdb.director.search;
 
 import java.net.URISyntaxException;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import by.sashnikov.jfuture.imdb.ParseUtil;
 import by.sashnikov.jfuture.imdb.SearchQuery;
+import by.sashnikov.jfuture.imdb.director.page.DirectorPageDTO;
+import by.sashnikov.jfuture.imdb.director.page.DirectorPageQuery;
+import by.sashnikov.jfuture.imdb.movie.page.MoviePageQuery;
 import by.sashnikov.jfuture.model.Director;
+import by.sashnikov.jfuture.model.Movie;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URIBuilder;
 
@@ -17,7 +24,7 @@ public class DirectorSearchQuery implements SearchQuery<Director> {
   private static final String BASE_SEARCH_URL = "https://www.imdb.com/search/name/";
   private static final String START_PARAM_NAME = "start";
   private static final String QUERY_SIZE_PARAM_NAME = "count";
-  private static final int QUERY_SIZE = 20;
+  private static final int QUERY_SIZE = 3;
 
   private final DirectorSearchPageParser parser;
   private int start;
@@ -45,8 +52,29 @@ public class DirectorSearchQuery implements SearchQuery<Director> {
 
   @Override
   public Set<Director> getData() {
-    Set<DirectorSearchDTO> directorSearchDTO = parser.directorsData();
-    return null;
+    Set<DirectorSearchDTO> directorDTOs = parser.directorsData();
+    Map<Director, Director> data =
+        directorDTOs.stream()
+            .map(this::createData)
+            .collect(Collectors.toMap(Function.identity(), Function.identity()));
+    return data.keySet();
+  }
+
+  private Director createData(DirectorSearchDTO directorSearchDTO) {
+    DirectorPageDTO directorPageDTO = new DirectorPageQuery(directorSearchDTO.link).getData();
+    Set<Movie> movies =
+        directorPageDTO.movieLinks.stream()
+            .map(MoviePageQuery::new)
+            .map(MoviePageQuery::getData)
+            .map(moviePageDTO -> new Movie(moviePageDTO.link, moviePageDTO.rating))
+            .collect(
+                Collectors.collectingAndThen(
+                    Collectors.toMap(Function.identity(), Function.identity()),
+                    Map<Movie, Movie>::keySet
+                )
+            );
+
+    return new Director(directorSearchDTO.link, directorSearchDTO.name, movies);
   }
 
   @Override
@@ -81,7 +109,7 @@ public class DirectorSearchQuery implements SearchQuery<Director> {
 
     private int currentPage = DirectorSearchQuery.this.start / QUERY_SIZE;
     private DirectorSearchQuery nextQuery = DirectorSearchQuery.this;
-    private int totalPages = parser.totalResultAmount() / QUERY_SIZE + 1;
+    private int totalPages = parser.totalItemsFound() / QUERY_SIZE + 1;
 
     @Override
     public boolean hasNext() {

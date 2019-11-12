@@ -3,8 +3,12 @@ package by.sashnikov.jfuture;
 import java.time.LocalDate;
 import java.time.Year;
 import java.time.temporal.TemporalAdjusters;
+import java.util.EnumMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 import by.sashnikov.jfuture.imdb.ReleaseDynamicsData;
 import by.sashnikov.jfuture.model.Country;
 import by.sashnikov.jfuture.model.Genre;
@@ -22,10 +26,26 @@ public class MovieReleaseDynamics {
       .with(TemporalAdjusters.lastDayOfYear());
 
   public static void createDynamicsCharts() {
+    Map<Genre, Map<Year, Map<String, Long>>> dataMap = new EnumMap<>(Genre.class);
     for (Genre genre : Genre.values()) {
       Set<Movie> genreMovies = pullGenreData(genre);
-      JfreePlot.releaseDynamicsPlot(genre, genreMovies);
+      dataMap.put(genre, groupReleaseDynamicsData(genreMovies));
     }
+    JfreePlot.releaseDynamicsPlot(dataMap);
+  }
+
+  private static Map<Year, Map<String, Long>> groupReleaseDynamicsData(Set<Movie> movies) {
+    return movies.stream()
+        .collect(
+            Collectors
+                .groupingBy(
+                    movie -> movie.year,
+                    TreeMap::new
+                    ,
+                    Collectors.groupingBy(
+                        movie -> movie.country.toString(),
+                        Collectors.counting()
+                    )));
   }
 
   private static Set<Movie> pullGenreData(Genre genre) {
@@ -36,7 +56,7 @@ public class MovieReleaseDynamics {
           genre,
           SEARCH_PERIOD_START,
           SEARCH_PERIOD_END);
-      Set<Movie> movies = releaseDynamicsData.fetchData();
+      Set<Movie> movies = releaseDynamicsData.data();
       genreMovies.addAll(movies);
     }
     return genreMovies;
