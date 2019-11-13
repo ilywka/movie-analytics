@@ -13,7 +13,7 @@ Movie analytics command line tool. Performs following aggregations over IMDB dat
 ## Getting Started
 **!Permissions to create directories/files in root folder required!** \
 Start app \
-(estimated duration: 1.~1min 2. ~10min):
+(estimated duration: 1. ~1min 2. ~1min):
 
 `./gradlew clean shadowJar && java -jar build/libs/movie-analytics-1.0-all.jar`  
 

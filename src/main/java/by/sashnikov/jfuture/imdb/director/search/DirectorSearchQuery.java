@@ -1,6 +1,7 @@
 package by.sashnikov.jfuture.imdb.director.search;
 
 import java.net.URISyntaxException;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -8,9 +9,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import by.sashnikov.jfuture.imdb.ParseUtil;
 import by.sashnikov.jfuture.imdb.SearchQuery;
-import by.sashnikov.jfuture.imdb.director.page.DirectorPageDTO;
-import by.sashnikov.jfuture.imdb.director.page.DirectorPageQuery;
-import by.sashnikov.jfuture.imdb.movie.page.MoviePageQuery;
 import by.sashnikov.jfuture.model.Director;
 import by.sashnikov.jfuture.model.Movie;
 import org.apache.http.NameValuePair;
@@ -23,7 +21,6 @@ public class DirectorSearchQuery implements SearchQuery<Director> {
 
   private static final String BASE_SEARCH_URL = "https://www.imdb.com/search/name/";
   private static final String START_PARAM_NAME = "start";
-  private static final String QUERY_SIZE_PARAM_NAME = "count";
   private static final int QUERY_SIZE = 3;
 
   private final DirectorSearchPageParser parser;
@@ -60,20 +57,10 @@ public class DirectorSearchQuery implements SearchQuery<Director> {
   }
 
   private Director createData(DirectorSearchDTO directorSearchDTO) {
-    DirectorPageDTO directorPageDTO = new DirectorPageQuery(directorSearchDTO.link).getData();
-    Set<Movie> movies =
-        directorPageDTO.movieLinks.stream()
-            .map(MoviePageQuery::new)
-            .map(MoviePageQuery::getData)
-            .map(moviePageDTO -> new Movie(moviePageDTO.link, moviePageDTO.rating))
-            .collect(
-                Collectors.collectingAndThen(
-                    Collectors.toMap(Function.identity(), Function.identity()),
-                    Map<Movie, Movie>::keySet
-                )
-            );
-
-    return new Director(directorSearchDTO.link, directorSearchDTO.name, movies);
+    Set<Movie> directorMovies = new HashSet<>();
+    DirectorMoviesSearchQuery searchQueries = new DirectorMoviesSearchQuery(directorSearchDTO.id);
+    searchQueries.forEach(movieSearchQuery -> directorMovies.addAll(movieSearchQuery.getData()));
+    return new Director(directorSearchDTO.id, directorSearchDTO.name, directorMovies);
   }
 
   @Override

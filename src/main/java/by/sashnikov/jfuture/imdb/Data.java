@@ -19,7 +19,6 @@ public abstract class Data<T> {
   public Set<T> data() {
     List<SearchQuery<T>> allSearchQueries = new ArrayList<>(createAllSearchQueries());
     String taskName = getTaskName();
-
     ConcurrentMap<Set<T>, Set<T>> data = ProgressBarUtil.wrapStream(allSearchQueries.parallelStream(), taskName)
         .map(SearchQuery::getData)
         .collect(Collectors.toConcurrentMap(Function.identity(), Function.identity()));

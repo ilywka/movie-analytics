@@ -5,11 +5,11 @@ package by.sashnikov.jfuture.imdb.director.search;
  */
 public class DirectorSearchDTO {
 
-  public final String link;
+  public final String id;
   public final String name;
 
-  public DirectorSearchDTO(String link, String name) {
-    this.link = link;
+  public DirectorSearchDTO(String id, String name) {
+    this.id = id;
     this.name = name;
   }
 }

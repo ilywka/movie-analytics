@@ -31,10 +31,15 @@ class DirectorSearchPageParser extends SearchPageParser {
       for (Element linkElement : linkElements) {
         String name = linkElement.text();
         String link = ParseUtil.extractPath(linkElement.attr("href"));
-        DirectorSearchDTO directorSearchDTO = new DirectorSearchDTO(ParseUtil.IMDB_URL.concat(link), name);
+        String id = extractId(link);
+        DirectorSearchDTO directorSearchDTO = new DirectorSearchDTO(id, name);
         directors.add(directorSearchDTO);
       }
     }
     return directors;
+  }
+
+  private String extractId(String link) {
+    return link.substring(link.lastIndexOf('/') + 1);
   }
 }
