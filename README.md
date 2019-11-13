@@ -17,4 +17,4 @@ Start app \
 
 `./gradlew clean shadowJar && java -jar build/libs/movie-analytics-1.0-all.jar`  
 
-Results stores in /charts directory.
+Results stored in /charts directory.
